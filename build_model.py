@@ -6,19 +6,6 @@ import matplotlib.pyplot as plt
 
 image_size = (180, 180)
 batch_size = 128
-
-train_ds, val_ds = keras.utils.image_dataset_from_directory(
-    "ASL_Alphabet_Dataset\\asl_alphabet_train",
-    validation_split=0.2,
-    subset="both",
-    seed=1337,
-    image_size=image_size,
-    batch_size=batch_size,
-)
-
-train_ds = train_ds.prefetch(tf_data.AUTOTUNE)
-val_ds = val_ds.prefetch(tf_data.AUTOTUNE)
-
 def make_model(input_shape, num_classes):
     inputs = keras.Input(shape=input_shape)
 
@@ -53,7 +40,7 @@ def make_model(input_shape, num_classes):
     x = layers.Activation("relu")(x)
 
     x = layers.GlobalAveragePooling2D()(x)
-    if num_classes == 29:
+    if num_classes == 2:
         units = 1
     else:
         units = num_classes
@@ -67,7 +54,7 @@ def make_model(input_shape, num_classes):
 model = make_model(input_shape=image_size + (3,), num_classes=29)
 keras.utils.plot_model(model, show_shapes=True)
 
-epochs = 1
+epochs = 25
 
 callbacks = [
     keras.callbacks.ModelCheckpoint("save_at_{epoch}.keras"),
